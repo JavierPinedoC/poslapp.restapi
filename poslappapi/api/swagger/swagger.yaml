@@ -21,7 +21,7 @@ paths:
   /roles:
     x-swagger-router-controller: roles.controller
     get:
-      description: get the game system list
+      description: get the role name list
       operationId: getRoles
       responses:
         "200":
@@ -39,32 +39,32 @@ definitions:
   Roles:
     type: object
     properties:
-      id_rol:
-        type: integer
-        description: Name of the Game System
+      # id_rol:
+      #   type: integer
+      #   description: Name of the Game System
       nombreRol:
         type: string
         description: Description of the Game System
     required:
-      - id_rol
+      # - id_rol
       - nombreRol
   GetRolesResponse:
     type: object
     properties:
-      id_rol:
-        type: integer
-        description: identifier
+      # id_rol:
+      #   type: integer
+      #   description: identifier
       nombreRol:
         type: string
         description: Name of the Game System
     required:
-      - id_rol
+      # - id_rol
       - nombreRol
   GetRolesListResponse:
     required:
-      - gamesystems
+      - rol
     properties:
-      gamesystems:
+      rol:
         type: array
         items:
           $ref: "#/definitions/GetRolesResponse"
