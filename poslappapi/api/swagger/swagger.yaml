@@ -32,6 +32,87 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+    post:
+      description: post the role name in list
+      operationId: addRol
+      parameters:
+        - in: body
+          name: nombreRol
+          description: The Rol to create.
+          schema:
+            $ref: "#/definitions/Roles"
+      responses:
+        "201":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetRolesResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /roles/{id}:
+    x-swagger-router-controller: roles.controller
+    get:
+      description: get the role name list
+      operationId: getRolesbyPk
+      parameters:
+        - name: id
+          description: rol id
+          type: number
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetRolesResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: update a game system
+      operationId: updateRoles
+      # define the parameters
+      parameters:
+        - name: id
+          description: game system id
+          type: number
+          in: path
+          required: true
+        - in: body
+          name: nombreRol
+          description: The Game System to update.
+          schema:
+            $ref: "#/definitions/Roles"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetRolesResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"  
+    delete:
+      description: delete a rol
+      # define the parameters
+      operationId: deleteRoles
+      parameters:
+        - name: id
+          description: rol id
+          type: number
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
@@ -44,9 +125,10 @@ definitions:
       #   description: Name of the Game System
       nombreRol:
         type: string
-        description: Description of the Game System
+        description: Description of name rol
     required:
-      # - id_rol
+      #- id_rol
+      # - id
       - nombreRol
   GetRolesResponse:
     type: object
@@ -54,11 +136,15 @@ definitions:
       # id_rol:
       #   type: integer
       #   description: identifier
+      id:
+        type: number
+        description: Identifier
       nombreRol:
         type: string
         description: Name of the Game System
     required:
       # - id_rol
+      # - id
       - nombreRol
   GetRolesListResponse:
     required:
@@ -68,6 +154,18 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/GetRolesResponse"
+  GeneralResponse:
+    type: object
+    properties:
+      success:
+        type: number
+        description: returns 1 if successful
+      description:
+        type: string
+        description: a short comment
+    required:
+      - success
+      - description
   ErrorResponse:
     required:
       - message

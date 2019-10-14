@@ -46,99 +46,119 @@ function getRoles(req, res) {
     }
 }
 
-// function getRolesById(req, res) {
+function addRol(req, res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype'); // If needed
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    try {
+        console.log("params : ");
+        var myrol = req.body;
+        console.log("Roles ... " + myrol);
+        return Roles
+            .create({
+                nombreRol: myrol.nombreRol,
+            }, {
+                /* include: [{
+                model: order_detail,
+                as: 'orderdetail'
+                }] */
+            })
+            .then((myrol) => {
+                res.status(201).send(myrol);
+            })
+            .catch((error) => res.status(400).send(error));
+    } catch (error) {
+        console.log("Was an error");
+        controllerHelper.handleErrorResponse(MODULE_NAME, addRol.nombreRol, error, res);
+    }
+}
 
-//     try {
-//         // Receiving parameters
-//         var params = {
-//             id: req.swagger.params.id.value
-//         };
+function getRolesbyPk(req, res) {
+    //console.log("operadores.controller getOperadorById");
+    try {
+        console.log(req.swagger.params.id.value);
+        var id = req.swagger.params.id.value;
+        console.log("Roles by id..." + id);
+        //console.log(Roles);
+        Roles.findByPk(id)
+            .then(myRole => {
+                console.log(myRole);
+                res.status(200).send(myRole);
+            })
+    } catch (error) {
+        console.log("Was an error");
+        controllerHelper.handleErrorResponse(MODULE_NAME, getRolesbyPk.id, error,
+            res);
+    }
+}
 
-//         // Call to service
-//         var result = Roleservice.getRolesById(params.id);
+function updateRoles(req, res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype'); // If needed
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    //console.log("operadores.controller getOperadorById");
+    try {
+        var id = req.swagger.params.id.value;
+        console.log("params : " + id);
+        var myupdateRol = req.body;
+        console.log("update Rols ... " + myupdateRol.name);
+        Roles.findByPk(id)
+            .then(myRol => {
+                console.log("Result of findById: " + myRol);
+                if (!myRol) {
+                    res.status(401).send(({}));
+                }
+                return myRol
+                    .update({
+                        nombreRol: myupdateRol.nombreRol
 
-//         // Returning the result
-//         if (!_.isUndefined(result)) {
-//             res.json(result);
-//         } else {
-//             res.status(404).json(messageHelper.buildMessage(GS_CT_ERR_Roles_NOT_FOUND))
-//         }
-//     } catch (error) {
-//         controllerHelper.handleErrorResponse(MODULE_NAME, getRolesById.name, error, res);
-//     }
-// }
+                    })
+                    .then(() => res.status(200).send(myRol))
+                    .catch(error => res.status(403).send(myRol));
+            })
+            .catch(error => {
+                console.log("There was an error: " + error);
+                //resolve(error);
+            });
+    } catch (error) {
+        console.log("Was an error");
+        controllerHelper.handleErrorResponse(MODULE_NAME, updateRol.nombreRol, error, res);
+    }
+}
 
-// function createRoles(req, res) {
+function deleteRoles(req, res) {
 
-//     try {
-//         // Receiving parameters
-//         var params = req.body;
-
-//         // Call to service
-//         var result = Roleservice.createRoles(params);
-
-//         // Returning the result
-//         if (!_.isUndefined(result) && _.isUndefined(result.error)) {
-//             res.status(201).json(result);
-//         } else {
-//             res.status(409).json(messageHelper.buildMessage(result.error));
-//         }
-//     } catch (error) {
-//         controllerHelper.handleErrorResponse(MODULE_NAME, createRoles.name, error, res);
-//     }
-// }
-
-// function updateRoles(req, res) {
-
-//     try {
-//         // Receiving parameters
-//         var params = {
-//             id: req.swagger.params.id.value
-//         };
-//         _.assign(params, req.body);
-
-//         // Call to service
-//         var result = Roleservice.updateRoles(params);
-
-//         // Returning the result
-//         if (!_.isUndefined(result) && _.isUndefined(result.error)) {
-//             res.json(result);
-//         } else {
-//             res.status(409).json(messageHelper.buildMessage(result.error));
-//         }
-//     } catch (error) {
-//         controllerHelper.handleErrorResponse(MODULE_NAME, updateRoles.name, error, res);
-//     }
-// }
-
-// function deleteRoles(req, res) {
-
-//     try {
-//         // Receiving parameters
-//         var params = {
-//             id: req.swagger.params.id.value
-//         };
-
-//         // Call to service
-//         var result = Roleservice.deleteRoles(params.id);
-
-//         // Returning the result
-//         if (!_.isUndefined(result) && _.isUndefined(result.error)) {
-//             res.json(messageHelper.buildMessage(GS_CT_DELETED_SUCCESSFULLY));
-//         } else {
-//             res.status(404).json(messageHelper.buildMessage(result.error));
-//         }
-//     } catch (error) {
-//         controllerHelper.handleErrorResponse(MODULE_NAME, createRoles.name, error, res);
-//     }
-// }
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype'); // If needed
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    console.log(req.swagger.params.id.value);
+    var id = req.swagger.params.id.value;
+    Roles.findByPk(id)
+        .then(myroles => {
+            console.log("Result of findById: " + myroles);
+            if (!myroles) {
+                res.status(200).send({ "success": 0, "description": "not found !" });
+            } else {
+                return myroles
+                    .destroy()
+                    .then(() => res.status(200).send({ "success": 1, "description": "deleted!" }))
+                    .catch(error => res.status(403).send({ "success": 0, "description": "error !" }))
+            }
+        })
+        .catch(error => {
+            console.log("There was an error: " + error);
+        });
+}
 
 module.exports = {
     getRoles,
-    // getRolesById,
-    // createRoles,
-    // updateRoles,
-    // deleteRoles,
+    addRol,
+    getRolesbyPk,
+    updateRoles,
+    deleteRoles,
     GS_CT_ERR_Roles_NOT_FOUND,
     GS_CT_DELETED_SUCCESSFULLY,
     MODULE_NAME
